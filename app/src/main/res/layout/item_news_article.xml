@@ -3,46 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="8dp">
 
-    <ImageView
-        android:id="@+id/image_view"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/backgrounds/scenic" />
+        android:layout_height="match_parent"
+        app:cardCornerRadius="8dp"
+        app:elevation="5dp">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:src="@drawable/gradient"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_view_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textColor="#fff"
-        app:layout_constraintEnd_toStartOf="@id/image_view_bookmark"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Headline" />
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/backgrounds/scenic" />
 
-    <ImageView
-        android:id="@+id/image_view_bookmark"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_margin="8dp"
-        android:src="@drawable/ic_unselected_bookmark_border_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:src="@drawable/gradient"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_view_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="#fff"
+                app:layout_constraintEnd_toStartOf="@id/image_view_bookmark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Headline" />
+
+            <ImageView
+                android:id="@+id/image_view_bookmark"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_unselected_bookmark_border_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

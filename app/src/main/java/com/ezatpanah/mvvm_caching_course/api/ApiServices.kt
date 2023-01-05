@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
-interface ApiService {
+interface ApiServices{
 
     //https://newsapi.org/v2/top-headlines?country=us&apiKey=****
 
