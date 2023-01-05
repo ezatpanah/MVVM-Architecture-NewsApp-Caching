@@ -9,7 +9,11 @@ import com.ezatpanah.mvvm_caching_course.db.NewsArticleDatabase
 import com.ezatpanah.mvvm_caching_course.utils.DataStatus
 import com.ezatpanah.mvvm_caching_course.utils.networkBoundResource
 import kotlinx.coroutines.flow.Flow
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
+import java.util.concurrent.TimeUnit
+
 
 class NewsRepository @Inject constructor(
     private val newsApi: ApiServices,
@@ -18,7 +22,11 @@ class NewsRepository @Inject constructor(
 
     private val newsArticleDao = newsArticleDb.newsArticleDao()
 
-    fun getBreakingNews(): Flow<DataStatus<List<NewsArticle>>> =
+    fun getBreakingNews(
+        forceRefresh: Boolean,
+        onFetchSuccess: () -> Unit,
+        onFetchFailed: (Throwable) -> Unit,
+    ): Flow<DataStatus<List<NewsArticle>>> =
         networkBoundResource(
             query = {
                 newsArticleDao.getAllBreakingNewsArticles()
@@ -47,7 +55,33 @@ class NewsRepository @Inject constructor(
                     newsArticleDao.insertArticles(breakingNewsArticles)
                     newsArticleDao.insertBreakingNews(breakingNews)
                 }
+            },
+            shouldFetch ={ cachedArticles ->
+                if (forceRefresh) {
+                    true
+                } else {
+                    val sortedArticles = cachedArticles.sortedBy { article ->
+                        article.updatedAt
+                    }
+                    val oldestTimestamp = sortedArticles.firstOrNull()?.updatedAt
+                    val needsRefresh = oldestTimestamp == null ||
+                            oldestTimestamp < System.currentTimeMillis() -
+                            TimeUnit.MINUTES.toMillis(5)
+                    needsRefresh
+                }
+            },
+            onFetchSuccess = onFetchSuccess,
+            onFetchFailed = { t ->
+                if (t !is HttpException && t !is IOException) {
+                    throw t
+                }
+                onFetchFailed(t)
             }
         )
+
+    suspend fun deleteNonBookmarkedArticlesOlderThan(timestampInMillis: Long) {
+        newsArticleDao.deleteNonBookmarkedArticlesOlderThan(timestampInMillis)
+    }
+
 
 }
