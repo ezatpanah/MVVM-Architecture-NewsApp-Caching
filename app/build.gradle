@@ -80,4 +80,6 @@ dependencies {
 
     // Fragment
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
+
+    implementation 'androidx.room:room-paging:2.4.3'
 }

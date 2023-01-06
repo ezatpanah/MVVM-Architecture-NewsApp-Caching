@@ -2,8 +2,7 @@ package com.ezatpanah.mvvm_caching_course.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingSource
-import com.ezatpanah.mvvm_caching_course.db.NewsArticle
+import com.ezatpanah.mvvm_caching_course.db.common.NewsArticle
 import com.ezatpanah.mvvm_caching_course.repository.NewsRepository
 import com.ezatpanah.mvvm_caching_course.utils.DataStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,6 +60,14 @@ class BreakingNewsViewModel @Inject constructor(
             viewModelScope.launch {
                 refreshTriggerChannel.send(Refresh.FORCE)
             }
+        }
+    }
+
+    fun onBookmarkClick(article: NewsArticle) {
+        val currentlyBookmarked = article.isBookmarked
+        val updatedArticle = article.copy(isBookmarked = !currentlyBookmarked)
+        viewModelScope.launch {
+            repository.updateArticle(updatedArticle)
         }
     }
 

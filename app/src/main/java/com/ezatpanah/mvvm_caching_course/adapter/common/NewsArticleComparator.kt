@@ -1,7 +1,7 @@
-package com.ezatpanah.mvvm_caching_course.adapter
+package com.ezatpanah.mvvm_caching_course.adapter.common
 
 import androidx.recyclerview.widget.DiffUtil
-import com.ezatpanah.mvvm_caching_course.db.NewsArticle
+import com.ezatpanah.mvvm_caching_course.db.common.NewsArticle
 
 class NewsArticleComparator : DiffUtil.ItemCallback<NewsArticle>() {
 

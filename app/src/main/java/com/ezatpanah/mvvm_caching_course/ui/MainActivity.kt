@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         selectFragment(selectedFragment)
 
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
+
             val fragment = when (item.itemId) {
                 R.id.nav_breaking -> breakingNewsFragment
                 R.id.nav_search -> searchNewsFragment
@@ -73,10 +74,22 @@ class MainActivity : AppCompatActivity() {
                 else -> throw IllegalArgumentException("Unexpected itemId")
             }
 
-            selectFragment(fragment)
+            if (selectedFragment === fragment) {
+                if (fragment is OnBottomNavigationFragmentReselectedListener) {
+                    fragment.onBottomNavigationFragmentReselected()
+                }
+            } else {
+                selectFragment(fragment)
+            }
+
             true
         }
     }
+
+    interface OnBottomNavigationFragmentReselectedListener {
+        fun onBottomNavigationFragmentReselected()
+    }
+
 
     private fun selectFragment(selectedFragment: Fragment) {
         var transaction = supportFragmentManager.beginTransaction()

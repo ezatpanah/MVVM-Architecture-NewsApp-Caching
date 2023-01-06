@@ -1,7 +1,7 @@
 package com.ezatpanah.mvvm_caching_course.api
 
 import com.ezatpanah.mvvm_caching_course.response.NewsResponse
-import com.ezatpanah.mvvm_caching_course.utils.Constants.Constants.API_KEY
+import com.ezatpanah.mvvm_caching_course.utils.Constants.API_KEY
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query

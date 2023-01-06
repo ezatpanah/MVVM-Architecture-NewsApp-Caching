@@ -1,8 +1,8 @@
 package com.ezatpanah.mvvm_caching_course.di
 
 import com.ezatpanah.mvvm_caching_course.api.ApiServices
-import com.ezatpanah.mvvm_caching_course.utils.Constants.Constants.BASE_URL
-import com.ezatpanah.mvvm_caching_course.utils.Constants.Constants.NETWORK_TIMEOUT
+import com.ezatpanah.mvvm_caching_course.utils.Constants.BASE_URL
+import com.ezatpanah.mvvm_caching_course.utils.Constants.NETWORK_TIMEOUT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module

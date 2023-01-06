@@ -1,5 +1,7 @@
 package com.ezatpanah.mvvm_caching_course.ui.breakingnews
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -8,42 +10,53 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ezatpanah.mvvm_caching_course.R
-import com.ezatpanah.mvvm_caching_course.adapter.NewsArticleListAdapter
+import com.ezatpanah.mvvm_caching_course.adapter.common.NewsArticleListAdapter
 import com.ezatpanah.mvvm_caching_course.databinding.FragmentBreakingNewsBinding
+import com.ezatpanah.mvvm_caching_course.databinding.FragmentSearchNewsBinding
+import com.ezatpanah.mvvm_caching_course.ui.MainActivity
 import com.ezatpanah.mvvm_caching_course.utils.DataStatus
 import com.ezatpanah.mvvm_caching_course.utils.exhaustive
 import com.ezatpanah.mvvm_caching_course.utils.showSnackbar
 import com.ezatpanah.mvvm_caching_course.viewmodel.BreakingNewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class BreakingNewsFragment : Fragment() {
+class BreakingNewsFragment : Fragment(),MainActivity.OnBottomNavigationFragmentReselectedListener {
 
     private val viewModel: BreakingNewsViewModel by viewModels()
 
-    private lateinit var binding: FragmentBreakingNewsBinding
-
-    @Inject
-    lateinit var newsArticleAdapter: NewsArticleListAdapter
+    private var currentBinding: FragmentBreakingNewsBinding? = null
+    private val binding get() = currentBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentBreakingNewsBinding.inflate(inflater, container, false)
-        return binding.root
+        currentBinding = FragmentBreakingNewsBinding.inflate(inflater, container, false)
+        return currentBinding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val newsArticleAdapter = NewsArticleListAdapter(
+            onItemClick = {
+                val uri = Uri.parse(it.url)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                requireActivity().startActivity(intent)
+            },
+            onBookmarkClick = {
+                viewModel.onBookmarkClick(it)
+            }
+        )
 
         binding.apply {
 
             recyclerView.apply {
                 adapter = newsArticleAdapter
                 layoutManager = LinearLayoutManager(requireContext())
+                setHasFixedSize(true)
+                itemAnimator?.changeDuration = 0
             }
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -114,5 +127,13 @@ class BreakingNewsFragment : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
 
+    override fun onBottomNavigationFragmentReselected() {
+        binding.recyclerView.scrollToPosition(0)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        currentBinding = null
+    }
 
 }

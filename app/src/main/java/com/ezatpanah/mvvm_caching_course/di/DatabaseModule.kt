@@ -2,8 +2,8 @@ package com.ezatpanah.mvvm_caching_course.di
 
 import android.content.Context
 import androidx.room.Room
-import com.ezatpanah.mvvm_caching_course.db.NewsArticleDatabase
-import com.ezatpanah.mvvm_caching_course.utils.Constants.Constants.NEWS_DATABASE
+import com.ezatpanah.mvvm_caching_course.db.common.NewsArticleDatabase
+import com.ezatpanah.mvvm_caching_course.utils.Constants.NEWS_DATABASE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

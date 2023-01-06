@@ -1,13 +1,15 @@
-package com.ezatpanah.mvvm_caching_course.adapter
+package com.ezatpanah.mvvm_caching_course.adapter.common
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ezatpanah.mvvm_caching_course.R
 import com.ezatpanah.mvvm_caching_course.databinding.ItemNewsArticleBinding
-import com.ezatpanah.mvvm_caching_course.db.NewsArticle
+import com.ezatpanah.mvvm_caching_course.db.common.NewsArticle
 
 class NewsArticleViewHolder(
-    private val binding: ItemNewsArticleBinding
+    private val binding: ItemNewsArticleBinding,
+    private val onItemClick: (Int) -> Unit,
+    private val onBookmarkClick: (Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(article: NewsArticle) {
@@ -27,4 +29,22 @@ class NewsArticleViewHolder(
             )
         }
     }
+
+    init {
+        binding.apply {
+            root.setOnClickListener {
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onItemClick(pos)
+                }
+            }
+            imageViewBookmark.setOnClickListener {
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onBookmarkClick(pos)
+                }
+            }
+        }
+    }
+
 }
