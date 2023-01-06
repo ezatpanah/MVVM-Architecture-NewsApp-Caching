@@ -20,7 +20,8 @@ import java.io.IOException
 class SearchNewsRemoteMediator(
     private val searchQuery: String,
     private val newsApi: ApiServices,
-    private val newsArticleDb: NewsArticleDatabase
+    private val newsArticleDb: NewsArticleDatabase,
+    private val refreshOnInit : Boolean
 ) : RemoteMediator<Int, NewsArticle>() {
 
     private val newsArticleDao = newsArticleDb.newsArticleDao()
@@ -38,7 +39,6 @@ class SearchNewsRemoteMediator(
 
         try {
             val response = newsApi.searchNews(searchQuery, page, state.config.pageSize)
-            delay(3000)
             val serverSearchResults = response.articles
 
             val bookmarkedArticles = newsArticleDao.getAllBookmarkedArticles().first()
@@ -81,6 +81,14 @@ class SearchNewsRemoteMediator(
             return MediatorResult.Error(exception)
         } catch (exception: HttpException) {
             return MediatorResult.Error(exception)
+        }
+    }
+
+    override suspend fun initialize(): InitializeAction {
+        return if (refreshOnInit){
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        }else{
+            InitializeAction.SKIP_INITIAL_REFRESH
         }
     }
 }

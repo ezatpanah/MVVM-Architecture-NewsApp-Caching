@@ -1,7 +1,7 @@
 package com.ezatpanah.mvvm_caching_course.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.fragment.app.Fragment.SavedState
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.ezatpanah.mvvm_caching_course.db.common.NewsArticle
 import com.ezatpanah.mvvm_caching_course.repository.NewsRepository
@@ -16,15 +16,15 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchNewsViewModel @Inject constructor(
     private val repository: NewsRepository,
+    state : SavedStateHandle
 ) : ViewModel() {
 
-    private val currentQuery = MutableStateFlow<String?>(null)
-
-    val hasCurrentQuery = currentQuery.map { it != null }
-
-    val searchResults = currentQuery.flatMapLatest { query ->
+    private val currentQuery = state.getLiveData<String?>("currentQuery",null)
+    val hasCurrentQuery = currentQuery.asFlow().map { it != null }
+    private var refreshOnInit = false
+    val searchResults = currentQuery.asFlow().flatMapLatest { query ->
         query?.let {
-            repository.getSearchResultsPaged(query)
+            repository.getSearchResultsPaged(query,refreshOnInit)
         } ?: emptyFlow()
     }.cachedIn(viewModelScope)
 
@@ -35,6 +35,7 @@ class SearchNewsViewModel @Inject constructor(
     var pendingScrollToTopAfterNewQuery = false
 
     fun onSearchQuerySubmit(query: String) {
+        refreshOnInit = true
         currentQuery.value = query
         newQueryInProgress = true
         pendingScrollToTopAfterNewQuery = true
